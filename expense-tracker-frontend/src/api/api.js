@@ -32,4 +32,15 @@ export const deleteTransaction = async (id) => {
   return data;
 };
 
+export const updateTransaction = async (id, updatedData) => {
+  const res = await fetch(`http://localhost:5000/api/transactions/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedData),
+  });
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to update transaction");
+  return data;
+};
 

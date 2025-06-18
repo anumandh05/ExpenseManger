@@ -48,5 +48,33 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ✅ Update a transaction by ID
+router.put("/:id", async (req, res) => {
+  const { text, amount, type } = req.body;
+
+  try {
+    const updatedTransaction = await Transaction.findByIdAndUpdate(
+      req.params.id,
+      { text, amount, type },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedTransaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    res.status(200).json({
+      message: "Transaction updated successfully",
+      transaction: updatedTransaction,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update transaction",
+      error: error.message,
+    });
+  }
+});
+
+
 
 module.exports = router;
