@@ -1,19 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
-import { signup } from "../api/api";
-
-const handleSignup = async () => {
-  const response = await signup({ name, email, password });
-  if (response.message === "User registered successfully") {
-    alert("Signup successful! Please sign in.");
-  } else {
-    alert(response.message);
-  }
-};
-
 
 function SignUp() {
+  const [name, setName] = useState(""); // ✅ name added
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,19 +11,19 @@ function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/signup", {
+    const res = await fetch("http://localhost:5000/api/users/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, email, password }), // ✅ name included
     });
 
     const data = await res.json();
 
     if (res.ok) {
-      localStorage.setItem("userId", data.user._id);
-      navigate("/dashboard");
+      alert("Signup successful! Please sign in.");
+      navigate("/signin");
     } else {
       alert(data.message || "Signup failed");
     }
@@ -43,6 +33,14 @@ function SignUp() {
     <div className="signup-container">
       <h2>Create Account</h2>
       <form className="signup-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Name"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+
         <input
           type="email"
           placeholder="Email"

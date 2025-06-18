@@ -1,18 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignIn.css";
-import { signin } from "../api/api";
-
-const handleSignin = async () => {
-  const response = await signin({ email, password });
-  if (response.message === "Signin successful") {
-    localStorage.setItem("userId", response.userId); // Save session
-    navigate("/dashboard");
-  } else {
-    alert(response.message);
-  }
-};
-
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -22,21 +10,25 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:5000/api/users/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      localStorage.setItem("userId", data.user._id);
-      navigate("/dashboard");
-    } else {
-      alert(data.message || "Signin failed");
+      if (res.ok) {
+        localStorage.setItem("userId", data.userId); // ✅ FIXED THIS LINE
+        navigate("/dashboard");
+      } else {
+        alert(data.message || "Signin failed");
+      }
+    } catch (error) {
+      alert("An error occurred. Please try again.");
     }
   };
 
