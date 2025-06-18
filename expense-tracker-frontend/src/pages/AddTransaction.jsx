@@ -10,22 +10,46 @@ function AddTransaction() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("User not logged in. Please sign in again.");
+      navigate("/signin");
+      return;
+    }
 
-    const res = await fetch("http://localhost:5000/api/transactions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId, amount: Number(amount), type, text }),
-    });
+    if (!text.trim()) {
+      alert("Please enter a description.");
+      return;
+    }
 
-    const data = await res.json();
-    if (res.ok) {
-      alert("Transaction added!");
-      navigate("/dashboard");
-    } else {
-      alert(data.message || "Failed to add transaction");
+    const transaction = {
+      userId,
+      amount: Number(amount),
+      type,
+      text: text.trim(),
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transaction),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Transaction added!");
+        navigate("/dashboard");
+      } else {
+        alert(data.message || "Failed to add transaction");
+      }
+    } catch (error) {
+      alert("Server error. Please try again later.");
+      console.error("Error adding transaction:", error);
     }
   };
 
@@ -39,6 +63,7 @@ function AddTransaction() {
           required
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
         />
 
         <label>Type:</label>
@@ -55,7 +80,7 @@ function AddTransaction() {
           onChange={(e) => setText(e.target.value)}
         />
 
-        <button type="submit">Add--&gt;</button>
+        <button type="submit">Add --&gt;</button>
       </form>
     </div>
   );
