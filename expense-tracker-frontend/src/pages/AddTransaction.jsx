@@ -1,84 +1,61 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddTransaction.css";
-import { addTransaction } from "../api/api";
-
-const handleAdd = async () => {
-  const userId = localStorage.getItem("userId");
-  const data = { type, amount, note, date, userId };
-
-  const response = await addTransaction(data);
-  if (response.message === "Transaction added") {
-    alert("Transaction added!");
-    // optional: redirect or reset form
-  } else {
-    alert("Failed to add transaction");
-  }
-};
-
 
 function AddTransaction() {
-  const [type, setType] = useState("income");
   const [amount, setAmount] = useState("");
-  const [note, setNote] = useState("");
-  const [date, setDate] = useState("");
+  const [type, setType] = useState("income");
+  const [text, setText] = useState("");
   const navigate = useNavigate();
-
-  const userId = localStorage.getItem("userId");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userId = localStorage.getItem("userId");
 
     const res = await fetch("http://localhost:5000/api/transactions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId, type, amount: Number(amount), note, date }),
+      body: JSON.stringify({ userId, amount: Number(amount), type, text }),
     });
 
     const data = await res.json();
-
     if (res.ok) {
-      navigate("/recent");
+      alert("Transaction added!");
+      navigate("/dashboard");
     } else {
-      alert(data.message || "Transaction failed");
+      alert(data.message || "Failed to add transaction");
     }
   };
 
   return (
     <div className="add-container">
       <h2>Add Transaction</h2>
-      <form className="add-form" onSubmit={handleSubmit}>
-        <select value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-
+      <form onSubmit={handleSubmit}>
+        <label>Amount:</label>
         <input
           type="number"
-          placeholder="Amount"
           required
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
 
-        <input
-          type="text"
-          placeholder="Note"
+        <label>Type:</label>
+        <select value={type} onChange={(e) => setType(e.target.value)}>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+
+        <label>About:</label>
+        <textarea
+          placeholder="Enter description..."
           required
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
 
-        <input
-          type="datetime-local"
-          required
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-
-        <button type="submit">Add Transaction</button>
+        <button type="submit">Add--&gt;</button>
       </form>
     </div>
   );

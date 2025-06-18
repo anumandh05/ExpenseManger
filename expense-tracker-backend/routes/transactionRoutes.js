@@ -3,29 +3,22 @@ const router = express.Router();
 const Transaction = require("../models/Transaction");
 
 // Add Transaction
-router.post("/add", async (req, res) => {
-  const { type, amount, note, date, userId } = req.body;
+router.post("/", async (req, res) => {
+  const { userId, text, amount } = req.body;
 
   try {
-    const newTransaction = new Transaction({
-      type,
-      amount,
-      note,
-      date,
-      userId,
-    });
-
+    const newTransaction = new Transaction({ userId, text, amount });
     await newTransaction.save();
     res.status(201).json({ message: "Transaction added", transaction: newTransaction });
   } catch (error) {
-    res.status(500).json({ message: "Failed to add transaction", error });
+    res.status(500).json({ message: "Transaction failed", error });
   }
 });
 
-// Get Recent Transactions by userId
+// Get Transactions by User ID
 router.get("/:userId", async (req, res) => {
   try {
-    const transactions = await Transaction.find({ userId: req.params.userId }).sort({ date: -1 });
+    const transactions = await Transaction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
     res.status(200).json(transactions);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch transactions", error });
