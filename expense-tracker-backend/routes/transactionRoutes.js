@@ -6,7 +6,6 @@ const Transaction = require("../models/Transaction");
 router.post("/", async (req, res) => {
   const { userId, text, amount, type } = req.body;
 
-  // Basic input validation
   if (!userId || !text || !amount || !type) {
     return res.status(400).json({ message: "All fields are required." });
   }
@@ -20,29 +19,19 @@ router.post("/", async (req, res) => {
     });
 
     await newTransaction.save();
-
-    res.status(201).json({
-      message: "Transaction added successfully",
-      transaction: newTransaction,
-    });
+    res.status(201).json({ message: "Transaction added", transaction: newTransaction });
   } catch (error) {
-    res.status(500).json({
-      message: "Transaction failed",
-      error: error.message || error,
-    });
+    res.status(500).json({ message: "Transaction failed", error: error.message });
   }
 });
 
-// ✅ Get Transactions by User ID
+// ✅ Get Transactions by userId
 router.get("/:userId", async (req, res) => {
   try {
     const transactions = await Transaction.find({ userId: req.params.userId }).sort({ createdAt: -1 });
     res.status(200).json(transactions);
   } catch (error) {
-    res.status(500).json({
-      message: "Failed to fetch transactions",
-      error: error.message || error,
-    });
+    res.status(500).json({ message: "Failed to fetch transactions", error: error.message });
   }
 });
 

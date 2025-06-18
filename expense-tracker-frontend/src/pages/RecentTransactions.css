@@ -1,38 +1,83 @@
-.recent-container {
-  max-width: 900px;
-  margin: auto;
-  padding: 2rem;
-  text-align: center;
+.recent-transactions {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.transaction-table {
+.recent-transactions h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 28px;
+  color: #333;
+}
+
+.recent-transactions table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1.5rem;
 }
 
-.transaction-table th,
-.transaction-table td {
-  border: 1px solid #ddd;
-  padding: 0.8rem;
+.recent-transactions th,
+.recent-transactions td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-.transaction-table th {
-  background-color: #f4f4f4;
+.recent-transactions th {
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 16px;
 }
 
-.green {
-  color: green;
-  font-weight: bold;
+.recent-transactions td {
+  font-size: 15px;
+  color: #555;
 }
 
-.red {
-  color: red;
-  font-weight: bold;
+.recent-transactions tr:hover {
+  background-color: #f0f8ff;
 }
 
-@media (max-width: 768px) {
-  .transaction-table {
-    font-size: 14px;
+@media screen and (max-width: 600px) {
+  .recent-transactions {
+    padding: 10px;
+  }
+
+  .recent-transactions h2 {
+    font-size: 22px;
+  }
+
+  .recent-transactions table,
+  .recent-transactions thead,
+  .recent-transactions tbody,
+  .recent-transactions th,
+  .recent-transactions td,
+  .recent-transactions tr {
+    display: block;
+  }
+
+  .recent-transactions tr {
+    margin-bottom: 15px;
+  }
+
+  .recent-transactions td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .recent-transactions td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: 45%;
+    padding-left: 10px;
+    font-weight: bold;
+    text-align: left;
+    color: #333;
   }
 }
