@@ -1,0 +1,38 @@
+.recent-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+.transaction-table th,
+.transaction-table td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+}
+
+.transaction-table th {
+  background-color: #f4f4f4;
+}
+
+.green {
+  color: green;
+  font-weight: bold;
+}
+
+.red {
+  color: red;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .transaction-table {
+    font-size: 14px;
+  }
+}
